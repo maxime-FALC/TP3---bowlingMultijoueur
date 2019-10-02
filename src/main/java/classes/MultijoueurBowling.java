@@ -53,19 +53,30 @@ public class MultijoueurBowling implements MultiPlayerGame {
     @Override
     public String startNewGame(String[] playerName) {
         
-        /* initialisation des parties personnelles de chaque joueurs */
-        joueurs = new SinglePlayerGame[playerName.length];
         
-        /* recuperation du nom des joueurs */
-        nomJoueurs = playerName;
+        /* vérifications si les noms sont corrects : */
+        if(listeJoueursValide(playerName)){
+            
+            /* initialisation des parties personnelles de chaque joueurs */
+            joueurs = new SinglePlayerGame[playerName.length];
         
-        /* le premier joueur à jouer est le joueur 0 */
-        numeroJoueur = 0;
+            /* recuperation du nom des joueurs */
+            nomJoueurs = playerName;
         
-        return REPONSES[0] + nomJoueurs[numeroJoueur] 
-                   + REPONSES[1] + joueurs[numeroJoueur].getFrameNumber() 
-                       + REPONSES[2] 
-                           + joueurs[numeroJoueur].getNextBallNumber();
+            /* le premier joueur à jouer est le joueur 0 */
+            numeroJoueur = 0;
+        
+            
+            return REPONSES[0] + nomJoueurs[numeroJoueur] 
+                       + REPONSES[1] + joueurs[numeroJoueur].getFrameNumber() 
+                           + REPONSES[2] 
+                               + joueurs[numeroJoueur].getNextBallNumber();
+        } else {
+            /*La liste des noms passée en argument n'est pas valide !*/
+            throw new IllegalArgumentException("La liste de joueurs doit"
+                                                + " être une liste de String"
+                                                + " non nulle");
+        }
     }
 
     
@@ -147,6 +158,31 @@ public class MultijoueurBowling implements MultiPlayerGame {
     private boolean verificationFinPartie(){
         
         return joueurs[numeroJoueur].isFinished();
+    }
+    
+    
+    
+    /**
+     * Vérifie que la liste des joueurs passée pour la partir est correcte
+     * @param listeNomJoueurs tableau de String contenant les noms des joueurs
+     * @return nomsCorrects booléen mis à true si la liste de noms est correcte
+     *                                  false sinon
+     */
+    private boolean listeJoueursValide(String [] listeNomJoueurs){
+        
+        boolean valide = true;
+        if(listeNomJoueurs.length < 1){
+            valide = false;
+        } else {
+            for(String nomJoueur : listeNomJoueurs){
+                if(nomJoueur.equals("")){
+                    valide = false;
+                }
+            }
+        }
+        
+        
+        return valide;
     }
     
 }
